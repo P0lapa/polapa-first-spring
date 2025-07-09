@@ -1,5 +1,7 @@
 package com.example.first_spring_project.Controllers;
 
+import com.example.first_spring_project.DTOs.AdvertisementCreateDto;
+import com.example.first_spring_project.DTOs.AdvertisementDto;
 import com.example.first_spring_project.Entities.AdvertisementEntity;
 import com.example.first_spring_project.Services.AdvertisementService;
 import org.springframework.http.ResponseEntity;
@@ -19,32 +21,30 @@ public class AdvertisementController {
     }
 
     @GetMapping
-    public List<AdvertisementEntity> getAllAdvertisements() {
-        return advertisementService.getAllAdvertisements();
+    public ResponseEntity<List<AdvertisementDto>> getAllAdvertisements() {
+        return ResponseEntity.ok(advertisementService.getAllAdvertisements());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AdvertisementEntity> getAdvertisementById(@PathVariable UUID id) {
-        Optional<AdvertisementEntity> advertisement = advertisementService.getAdvertisementById(id);
-        return advertisement
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AdvertisementDto> getAdvertisementById(@PathVariable UUID id) {
+        return ResponseEntity.ok(advertisementService.getAdvertisementById(id));
     }
 
     @PostMapping
-    public void createAdvertisement(@RequestBody AdvertisementEntity advertisementEntity) {
-        advertisementService.createAdvertisement(advertisementEntity);
+    public ResponseEntity<AdvertisementDto> createAdvertisement(@RequestBody AdvertisementCreateDto advertisementCreateDto) {
+        return ResponseEntity.ok(advertisementService.createAdvertisement(advertisementCreateDto));
     }
 
     @PutMapping("/{id}")
-    public void updateAdvertisement(@PathVariable UUID id, @RequestBody AdvertisementEntity advertisementEntity) {
-        advertisementService.updateAdvertisement(id, advertisementEntity);
+    public ResponseEntity<AdvertisementDto> updateAdvertisement(@PathVariable UUID id, @RequestBody AdvertisementCreateDto advertisementUpdateDto) {
+        return ResponseEntity.ok(advertisementService.updateAdvertisement(id, advertisementUpdateDto));
     }
 
 
     @DeleteMapping("/{id}")
-    public void deleteAdvertisement(@PathVariable UUID id){
+    public ResponseEntity<Void> deleteAdvertisement(@PathVariable UUID id){
         advertisementService.deleteAdvertisement(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

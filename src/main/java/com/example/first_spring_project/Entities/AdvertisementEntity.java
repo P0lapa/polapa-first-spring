@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,4 +36,6 @@ public class AdvertisementEntity {
     public void prePersist() {
         createdAt = LocalDateTime.now();
     }
+    @OneToMany(mappedBy = "advertisementId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PhotoEntity> photos = new ArrayList<>();
 }
