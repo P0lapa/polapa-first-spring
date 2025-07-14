@@ -1,6 +1,6 @@
-package com.example.first_spring_project.Repositories;
+package com.example.first_spring_project.repository;
 
-import com.example.first_spring_project.Entities.AdvertisementEntity;
+import com.example.first_spring_project.entity.AdvertisementEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 

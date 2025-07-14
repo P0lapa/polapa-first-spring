@@ -1,4 +1,4 @@
-package com.example.first_spring_project.Entities;
+package com.example.first_spring_project.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
