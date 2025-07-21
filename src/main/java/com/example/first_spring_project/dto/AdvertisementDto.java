@@ -13,7 +13,7 @@ public class AdvertisementDto {
     private String title;
     private String description;
     private String phone;
-    private String category;
+    private List<String> categories;
     private LocalDateTime createdAt;
     private List<PhotoResponse> photos;
 }

@@ -24,7 +24,7 @@ public class PhotoService {
 
     private final Path uploadPath = Paths.get("src/main/resources/uploads");
 
-    public List<PhotoResponse> saveAll(MultipartFile[] files) throws IOException {
+    public List<PhotoResponse> saveAll(List<MultipartFile> files) throws IOException {
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -56,4 +56,6 @@ public class PhotoService {
                         .build())
                 .toList();
     }
+
+
 }

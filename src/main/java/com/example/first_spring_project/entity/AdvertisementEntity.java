@@ -36,6 +36,14 @@ public class AdvertisementEntity {
     public void prePersist() {
         createdAt = LocalDateTime.now();
     }
+
     @OneToMany(mappedBy = "advertisementId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PhotoEntity> photos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "advertisementId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CategoryEntity> categories = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userId;
 }

@@ -10,6 +10,6 @@ public class CreateAdvertisementRequest {
     private String title;
     private String description;
     private String phone;
-    private String category;
+    private List<String> categories;
     private List<PhotoResponse> photos;
 }

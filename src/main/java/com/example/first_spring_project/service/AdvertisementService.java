@@ -3,6 +3,7 @@ package com.example.first_spring_project.service;
 import com.example.first_spring_project.dto.CreateAdvertisementRequest;
 import com.example.first_spring_project.dto.AdvertisementDto;
 import com.example.first_spring_project.entity.AdvertisementEntity;
+import com.example.first_spring_project.entity.CategoryEntity;
 import com.example.first_spring_project.entity.PhotoEntity;
 import com.example.first_spring_project.mapper.AdvertisementMapper;
 import com.example.first_spring_project.repository.AdvertisementRepository;
@@ -35,6 +36,8 @@ public class AdvertisementService {
     public AdvertisementDto createAdvertisement(CreateAdvertisementRequest createAdvertisementRequest) {
         AdvertisementEntity advertisementEntity = advertisementMapper.fromCreateDto(createAdvertisementRequest);
 
+        advertisementEntity.getCategories().forEach(cat -> cat.setAdvertisementId(advertisementEntity));
+
         List<PhotoEntity> photos = createAdvertisementRequest.getPhotos().stream()
                 .map(photoDto -> PhotoEntity.builder()
                         .url(photoDto.getUrl())
@@ -49,33 +52,43 @@ public class AdvertisementService {
         return advertisementMapper.toDto(createdAdvertisementEntity);
     }
 
-    public AdvertisementDto updateAdvertisement(UUID id, CreateAdvertisementRequest advertisementUpdateDto) {
-        AdvertisementEntity advertisementEntity = advertisementRepository.findById(id)
+    public AdvertisementDto updateAdvertisement(UUID id, CreateAdvertisementRequest request) {
+        AdvertisementEntity advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Объявление не найдено"));
 
-        advertisementEntity.setTitle(advertisementUpdateDto.getTitle());
-        advertisementEntity.setDescription(advertisementUpdateDto.getDescription());
-        advertisementEntity.setPhone(advertisementUpdateDto.getPhone());
-        advertisementEntity.setCategory(advertisementUpdateDto.getCategory());
+        advertisement.setTitle(request.getTitle());
+        advertisement.setDescription(request.getDescription());
+        advertisement.setPhone(request.getPhone());
 
-        advertisementEntity.getPhotos().clear();
+        advertisement.getPhotos().clear();
 
-        List<PhotoEntity> newPhotos = advertisementUpdateDto.getPhotos().stream()
+        List<PhotoEntity> newPhotos = request.getPhotos().stream()
                 .map(photoDto -> PhotoEntity.builder()
                         .url(photoDto.getUrl())
                         .originalFilename(photoDto.getOriginalFilename())
-                        .advertisementId(advertisementEntity)
+                        .advertisementId(advertisement)
                         .build())
                 .toList();
 
-        advertisementEntity.getPhotos().addAll(newPhotos);
+        advertisement.getPhotos().addAll(newPhotos);
 
-        AdvertisementEntity updatedAdvertisementEntity = advertisementRepository.save(advertisementEntity);
+        advertisement.getCategories().clear();
 
-        return advertisementMapper.toDto(updatedAdvertisementEntity);
+        List<CategoryEntity> newCategories = request.getCategories().stream()
+                .map(name -> CategoryEntity.builder()
+                        .name(name)
+                        .advertisementId(advertisement)
+                        .build())
+                .toList();
+
+        advertisement.getCategories().addAll(newCategories);
+
+        AdvertisementEntity updated = advertisementRepository.save(advertisement);
+        return advertisementMapper.toDto(updated);
     }
 
-     public void deleteAdvertisement(UUID id) {
+
+    public void deleteAdvertisement(UUID id) {
         advertisementRepository.deleteById(id);
      }
 }
